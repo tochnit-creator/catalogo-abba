@@ -602,6 +602,59 @@
     overflow: hidden;
   }
 
+  /* HERO BG + SMOKE */
+  .hero-bg {
+    position: fixed;
+    inset: 0;
+    background-image: url('https://images.unsplash.com/photo-1519892300165-cb5542fb47c7?w=1600&q=80&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center 30%;
+    filter: grayscale(100%) brightness(0.22);
+    z-index: 0;
+  }
+
+  .smoke-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .smoke-puff {
+    position: absolute;
+    bottom: -80px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(255,255,255,0.07) 0%, transparent 70%);
+    animation: smokeDrift linear infinite;
+    filter: blur(30px);
+  }
+
+  .smoke-puff:nth-child(1) { width:400px; height:300px; left:5%;  animation-duration:18s; animation-delay:0s;   }
+  .smoke-puff:nth-child(2) { width:300px; height:250px; left:25%; animation-duration:22s; animation-delay:3s;   }
+  .smoke-puff:nth-child(3) { width:500px; height:350px; left:50%; animation-duration:16s; animation-delay:7s;   }
+  .smoke-puff:nth-child(4) { width:350px; height:280px; left:70%; animation-duration:20s; animation-delay:1s;   }
+  .smoke-puff:nth-child(5) { width:280px; height:220px; left:85%; animation-duration:24s; animation-delay:12s;  }
+
+  @keyframes smokeDrift {
+    0%   { transform: translateY(0)    scaleX(1)   opacity(0);   opacity: 0; }
+    10%  { opacity: 1; }
+    80%  { opacity: 0.6; }
+    100% { transform: translateY(-600px) scaleX(1.6) opacity(0); opacity: 0; }
+  }
+
+  .hero-overlay {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(10,10,15,0.35) 0%, rgba(10,10,15,0.75) 100%);
+    z-index: 2;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 3;
+  }
+
   @media (max-width: 600px) {
     nav { display: none; }
     .cart-drawer { width: 100%; }
@@ -632,9 +685,20 @@
 </header>
 
 <section class="hero">
-  <div class="hero-label">✦ Loja Oficial ✦</div>
-  <h1>ABBA STUDIO</h1>
-  <p>Snacks, energéticos e doces para o seu studio session. Energia para criar sem parar.</p>
+  <div class="hero-bg"></div>
+  <div class="smoke-layer">
+    <div class="smoke-puff"></div>
+    <div class="smoke-puff"></div>
+    <div class="smoke-puff"></div>
+    <div class="smoke-puff"></div>
+    <div class="smoke-puff"></div>
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-label">✦ Loja Oficial ✦</div>
+    <h1>ABBA STUDIO</h1>
+    <p>Snacks, energéticos e doces para o seu studio session. Energia para criar sem parar.</p>
+  </div>
 </section>
 
 
@@ -896,11 +960,11 @@ function toggleCart() {
 function checkout() {
   if (cart.length === 0) { showToast('Adicione itens primeiro!'); return; }
   const total = cart.reduce((s, i) => s + getPrice(i.cost) * i.qty, 0);
-  let msg = '🎵 *Pedido - Abba Studio*\n\n';
+  let msg = '*Pedido - Abba Studio*\n\n';
   cart.forEach(i => {
-    msg += `• ${i.name} x${i.qty} — ${fmt(getPrice(i.cost) * i.qty)}\n`;
+    msg += `- ${i.name} x${i.qty} -- ${fmt(getPrice(i.cost) * i.qty)}\n`;
   });
-  msg += `\n💰 *Total: ${fmt(total)}*`;
+  msg += `\n*Total: ${fmt(total)}*`;
   const url = 'https://wa.me/5511945807217?text=' + encodeURIComponent(msg);
   window.open(url, '_blank');
   cart = [];
