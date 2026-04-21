@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abba Studio — Loja</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #111118;
+    --bg3: #1a1a24;
+    --card: #16161f;
+    --accent: #e8b84b;
+    --accent2: #f0d080;
+    --text: #f0ede8;
+    --muted: #888;
+    --border: rgba(232,184,75,0.15);
+    --red: #e05050;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* NOISE TEXTURE */
+  body::before {
+    content:'';
+    position:fixed;top:0;left:0;right:0;bottom:0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events:none;z-index:0;opacity:.4;
+  }
+
+  /* HEADER */
+  header {
+    position: relative;
+    z-index: 10;
+    padding: 0 2rem;
+    border-bottom: 1px solid var(--border);
+    background: rgba(10,10,15,0.95);
+    backdrop-filter: blur(20px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 72px;
+    position: sticky;
+    top: 0;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-icon {
+    width: 38px; height: 38px;
+    background: var(--accent);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+
+  .logo-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 3px;
+    color: var(--text);
+  }
+
+  .logo-text span {
+    color: var(--accent);
+  }
+
+  .header-tag {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  nav a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: color .2s;
+  }
+
+  nav a:hover { color: var(--accent); }
+
+  .cart-btn {
+    background: var(--accent);
+    color: #000;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background .2s, transform .1s;
+  }
+
+  .cart-btn:hover { background: var(--accent2); transform: scale(1.02); }
+
+  .cart-count {
+    background: #000;
+    color: var(--accent);
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    font-size: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+  }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    z-index: 1;
+    padding: 5rem 2rem 4rem;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content:'';
+    position: absolute;
+    top: -100px; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 400px;
+    background: radial-gradient(ellipse, rgba(232,184,75,0.12) 0%, transparent 70%);
+    pointer-events:none;
+  }
+
+  .hero-label {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid rgba(232,184,75,0.3);
+    padding: 6px 16px;
+    border-radius: 20px;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    letter-spacing: 4px;
+    line-height: 1;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #fff 30%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero p {
+    font-size: 16px;
+    color: var(--muted);
+    max-width: 500px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.7;
+  }
+
+  /* STATS BAR */
+  .stats-bar {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    padding: 1.5rem 2rem;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--bg2);
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: var(--accent);
+    letter-spacing: 2px;
+    display: block;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* FILTER / SEARCH */
+  .controls {
+    position: relative;
+    z-index: 1;
+    padding: 2rem 2rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .search-box {
+    flex: 1;
+    min-width: 200px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color .2s;
+  }
+
+  .search-box:focus { border-color: var(--accent); }
+  .search-box::placeholder { color: var(--muted); }
+
+  .filter-btn {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all .2s;
+  }
+
+  .filter-btn:hover, .filter-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(232,184,75,0.08);
+  }
+
+  .sort-select {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    outline: none;
+  }
+
+  /* PRODUCTS */
+  .products-section {
+    position: relative;
+    z-index: 1;
+    padding: 1rem 2rem 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-title {
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+    padding-bottom: .75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-title span {
+    color: var(--accent);
+    margin-left: .5rem;
+  }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+
+  .product-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: border-color .2s, transform .15s;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .product-card::before {
+    content:'';
+    position:absolute;
+    top:0;left:0;right:0;height:2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity .2s;
+  }
+
+  .product-card:hover {
+    border-color: rgba(232,184,75,0.4);
+    transform: translateY(-2px);
+  }
+
+  .product-card:hover::before { opacity: 1; }
+
+  .product-category {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .cat-pill {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+
+  .cat-snack { background: rgba(232,184,75,.12); color: var(--accent); }
+  .cat-drink { background: rgba(80,160,220,.12); color: #5fbde0; }
+  .cat-candy { background: rgba(200,100,180,.12); color: #d884c5; }
+
+  .product-name {
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--text);
+    flex: 1;
+  }
+
+  .product-code {
+    font-size: 10px;
+    color: var(--muted);
+    font-family: monospace;
+    letter-spacing: .5px;
+  }
+
+  .product-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+  }
+
+  .price-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .price-cost {
+    font-size: 10px;
+    color: var(--muted);
+    text-decoration: line-through;
+  }
+
+  .price-sale {
+    font-size: 1.3rem;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 1px;
+    color: var(--accent);
+  }
+
+  .qty-badge {
+    font-size: 11px;
+    color: var(--muted);
+    background: var(--bg3);
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+
+  .add-btn {
+    width: 34px; height: 34px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--accent);
+    font-size: 20px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .15s;
+  }
+
+  .add-btn:hover {
+    background: var(--accent);
+    color: #000;
+    border-color: var(--accent);
+  }
+
+  /* HIDDEN */
+  .hidden { display: none !important; }
+
+  /* CART DRAWER */
+  .cart-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,.7);
+    z-index: 100;
+  }
+
+  .cart-overlay.open { display: block; }
+
+  .cart-drawer {
+    position: fixed;
+    top: 0; right: -420px;
+    width: 400px;
+    height: 100vh;
+    background: var(--bg2);
+    border-left: 1px solid var(--border);
+    z-index: 101;
+    transition: right .3s cubic-bezier(.4,0,.2,1);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cart-drawer.open { right: 0; }
+
+  .cart-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .cart-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+    color: var(--text);
+  }
+
+  .close-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    width: 32px; height: 32px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all .15s;
+  }
+
+  .close-btn:hover { border-color: var(--red); color: var(--red); }
+
+  .cart-items {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+  }
+
+  .cart-empty {
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 3rem;
+    letter-spacing: 1px;
+  }
+
+  .cart-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .ci-info { flex: 1; min-width: 0; }
+
+  .ci-name {
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .ci-price { font-size: 12px; color: var(--accent); margin-top: 2px; }
+
+  .ci-qty {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .ci-qty button {
+    width: 24px; height: 24px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all .1s;
+  }
+
+  .ci-qty button:hover { border-color: var(--accent); color: var(--accent); }
+  .ci-qty span { font-size: 13px; min-width: 20px; text-align: center; }
+
+  .cart-footer {
+    padding: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .cart-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .cart-total-label { font-size: 12px; text-transform: uppercase; letter-spacing: 2px; color: var(--muted); }
+
+  .cart-total-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    color: var(--accent);
+    letter-spacing: 2px;
+  }
+
+  .checkout-btn {
+    width: 100%;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    padding: 14px;
+    border-radius: 8px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background .15s, transform .1s;
+  }
+
+  .checkout-btn:hover { background: var(--accent2); transform: scale(1.01); }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--accent);
+    color: #000;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 13px;
+    z-index: 200;
+    transition: transform .3s cubic-bezier(.4,0,.2,1);
+    white-space: nowrap;
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* WAVEFORM DECO */
+  .wave-deco {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 1rem 2rem;
+    overflow: hidden;
+  }
+
+  @media (max-width: 600px) {
+    nav { display: none; }
+    .cart-drawer { width: 100%; }
+    .hero h1 { font-size: 3rem; }
+    .stats-bar { gap: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">🎵</div>
+    <div>
+      <div class="logo-text">ABBA <span>STUDIO</span></div>
+      <div class="header-tag">Music Store</div>
+    </div>
+  </div>
+  <nav>
+    <a href="#">Produtos</a>
+    <a href="#">Sobre</a>
+    <a href="#">Contato</a>
+  </nav>
+  <button class="cart-btn" onclick="toggleCart()">
+    🛒 Carrinho
+    <span class="cart-count" id="cartCount">0</span>
+  </button>
+</header>
+
+<section class="hero">
+  <div class="hero-label">✦ Loja Oficial ✦</div>
+  <h1>ABBA STUDIO</h1>
+  <p>Snacks, energéticos e doces para o seu studio session. Energia para criar sem parar.</p>
+</section>
+
+
+
+<div class="controls">
+  <input type="text" class="search-box" placeholder="🔍  Buscar produto..." id="searchInput" oninput="filterProducts()">
+  <button class="filter-btn active" onclick="setFilter('todos', this)">Todos</button>
+  <button class="filter-btn" onclick="setFilter('bebida', this)">Energéticos</button>
+  <button class="filter-btn" onclick="setFilter('snack', this)">Snacks</button>
+  <button class="filter-btn" onclick="setFilter('doce', this)">Doces</button>
+  <select class="sort-select" onchange="sortProducts(this.value)">
+    <option value="name">A – Z</option>
+    <option value="price-asc">Menor preço</option>
+    <option value="price-desc">Maior preço</option>
+  </select>
+</div>
+
+<section class="products-section">
+  <div class="section-title">Catálogo <span id="productCount"></span></div>
+  <div class="products-grid" id="productsGrid"></div>
+</section>
+
+<!-- CART DRAWER -->
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <div class="cart-title">Carrinho</div>
+    <button class="close-btn" onclick="toggleCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty">Nenhum item adicionado.</div>
+  </div>
+  <div class="cart-footer">
+    <div class="cart-total-row">
+      <span class="cart-total-label">Total</span>
+      <span class="cart-total-value" id="cartTotal">R$ 0,00</span>
+    </div>
+    <button class="checkout-btn" onclick="checkout()">Finalizar Pedido →</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const PRODUCTS = [
+  { id:1,  name:"Energético Engov 26", code:"7896094928367", cat:"bebida",  cost:5.99 },
+  { id:2,  name:"Energético Engov 26", code:"7896094931138", cat:"bebida",  cost:7.99 },
+  { id:3,  name:"Energético Engov 26", code:"7896094928343", cat:"bebida",  cost:5.99 },
+  { id:4,  name:"Energético Engov 26", code:"7896094928350", cat:"bebida",  cost:5.99 },
+  { id:5,  name:"Energético Engov 26", code:"7896094928350b",cat:"bebida",  cost:5.99 },
+  { id:6,  name:"Energético Engov 26", code:"7896094931138b",cat:"bebida",  cost:7.99 },
+  { id:7,  name:"Salg Elma Ch Dorito", code:"7892840822392", cat:"snack",   cost:5.59 },
+  { id:8,  name:"Salg Elma Ch Dorito", code:"7892840822385", cat:"snack",   cost:5.59 },
+  { id:9,  name:"Amendoim Yoki Croc",  code:"7891095911813", cat:"snack",   cost:8.99 },
+  { id:10, name:"Amendoim Yoki Croc",  code:"7891095911813b",cat:"snack",   cost:8.99 },
+  { id:11, name:"Salg Panco Bisnack",  code:"7891203069528", cat:"snack",   cost:3.29 },
+  { id:12, name:"Salg Panco Bisnack",  code:"7891203060082", cat:"snack",   cost:3.29 },
+  { id:13, name:"Salg Elma Ch Dorito", code:"7892840822392b",cat:"snack",   cost:5.59 },
+  { id:14, name:"Salg Elma Ch Dorito", code:"7892840822385b",cat:"snack",   cost:5.59 },
+  { id:15, name:"Amendoim Yoki Croc",  code:"7891095911813c",cat:"snack",   cost:8.99 },
+  { id:16, name:"Bisc Nab Club 141g",  code:"7622210641632", cat:"snack",   cost:5.99 },
+  { id:17, name:"Bisc Nab Club Origi", code:"7622300990701", cat:"snack",   cost:5.99 },
+  { id:18, name:"Bombom Lacta 20g Sonho V",  code:"78939301a", cat:"doce",  cost:1.89 },
+  { id:19, name:"Bombom Lacta 20g Sonho V",  code:"78939301b", cat:"doce",  cost:1.89 },
+  { id:20, name:"Bombom Lacta 20g Ouro Br",  code:"78939318a", cat:"doce",  cost:1.89 },
+  { id:21, name:"Bombom Lacta 20g Ouro Br",  code:"78939318b", cat:"doce",  cost:1.89 },
+  { id:22, name:"Bombom Lacta 20g Ouro Br",  code:"78939318c", cat:"doce",  cost:1.89 },
+  { id:23, name:"Bombom Lacta 20g Ouro Br",  code:"78939318d", cat:"doce",  cost:1.89 },
+  { id:24, name:"Bombom Lacta 20g Sonho V",  code:"78939301c", cat:"doce",  cost:1.89 },
+  { id:25, name:"Bombom Lacta 20g Sonho V",  code:"78939301d", cat:"doce",  cost:1.89 },
+  { id:26, name:"Bombom Lacta 20g Sonho V",  code:"78939301e", cat:"doce",  cost:1.89 },
+  { id:27, name:"Bombom Lacta 20g Sonho V",  code:"78939301f", cat:"doce",  cost:1.89 },
+  { id:28, name:"Bombom Lacta 20g Ouro Br",  code:"78939318e", cat:"doce",  cost:1.89 },
+  { id:29, name:"Bombom Lacta 20g Sonho V",  code:"78939301g", cat:"doce",  cost:1.89 },
+  { id:30, name:"Bombom Lacta 20g Ouro Br",  code:"78939318f", cat:"doce",  cost:1.89 },
+  { id:31, name:"Bombom Lacta 20g Ouro Br",  code:"78939318g", cat:"doce",  cost:1.89 },
+  { id:32, name:"Bombom Lacta 20g Ouro Br",  code:"78939318h", cat:"doce",  cost:1.89 },
+  { id:33, name:"Bombom Lacta 20g Ouro Br",  code:"78939318i", cat:"doce",  cost:1.89 },
+  { id:34, name:"Bombom Lacta 20g Ouro Br",  code:"78939318j", cat:"doce",  cost:1.89 },
+  { id:35, name:"Bombom Lacta 20g Sonho V",  code:"78939301h", cat:"doce",  cost:1.89 },
+  { id:36, name:"Salg Elma Ch Dorito",        code:"7892840822378",cat:"snack", cost:4.99 },
+  { id:37, name:"Salg Elma Ch Dorito",        code:"7892840822378b",cat:"snack",cost:4.99 },
+];
+
+const MARGIN = 2.50;
+const catMap = { bebida: 'Energético', snack: 'Snack', doce: 'Doce' };
+const catClass = { bebida: 'cat-drink', snack: 'cat-snack', doce: 'cat-candy' };
+
+let cart = [];
+let activeFilter = 'todos';
+let activeSort = 'name';
+
+function getPrice(cost) { return cost + MARGIN; }
+
+function fmt(val) {
+  return 'R$ ' + val.toFixed(2).replace('.', ',');
+}
+
+function renderProducts(list) {
+  const grid = document.getElementById('productsGrid');
+  document.getElementById('productCount').textContent = '— ' + list.length + ' itens';
+  grid.innerHTML = list.map(p => {
+    const sale = getPrice(p.cost);
+    return `
+    <div class="product-card" data-cat="${p.cat}">
+      <div class="product-category">
+        <span class="cat-pill ${catClass[p.cat]}">${catMap[p.cat]}</span>
+      </div>
+      <div>
+        <div class="product-name">${p.name}</div>
+        <div class="product-code">${p.code}</div>
+      </div>
+      <div class="product-footer">
+        <div class="price-group">
+          <div class="price-sale">${fmt(sale)}</div>
+        </div>
+        <button class="add-btn" onclick="addToCart(${p.id})" title="Adicionar ao carrinho">+</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterProducts() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  let list = PRODUCTS.filter(p => {
+    const matchCat = activeFilter === 'todos' || p.cat === activeFilter;
+    const matchQ = p.name.toLowerCase().includes(q) || p.code.includes(q);
+    return matchCat && matchQ;
+  });
+  list = sortList(list, activeSort);
+  renderProducts(list);
+}
+
+function setFilter(cat, btn) {
+  activeFilter = cat;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  filterProducts();
+}
+
+function sortList(list, by) {
+  return [...list].sort((a, b) => {
+    if (by === 'name') return a.name.localeCompare(b.name);
+    if (by === 'price-asc') return a.cost - b.cost;
+    if (by === 'price-desc') return b.cost - a.cost;
+  });
+}
+
+function sortProducts(by) {
+  activeSort = by;
+  filterProducts();
+}
+
+function addToCart(id) {
+  const p = PRODUCTS.find(x => x.id === id);
+  const existing = cart.find(x => x.id === id);
+  if (existing) {
+    existing.qty++;
+  } else {
+    cart.push({ ...p, qty: 1 });
+  }
+  updateCartUI();
+  showToast('✓ ' + p.name + ' adicionado!');
+}
+
+function removeFromCart(id) {
+  cart = cart.filter(x => x.id !== id);
+  updateCartUI();
+}
+
+function changeQty(id, delta) {
+  const item = cart.find(x => x.id === id);
+  if (!item) return;
+  item.qty += delta;
+  if (item.qty <= 0) removeFromCart(id);
+  else updateCartUI();
+}
+
+function updateCartUI() {
+  const total = cart.reduce((s, i) => s + getPrice(i.cost) * i.qty, 0);
+  const count = cart.reduce((s, i) => s + i.qty, 0);
+
+  document.getElementById('cartCount').textContent = count;
+  document.getElementById('cartTotal').textContent = fmt(total);
+
+  const el = document.getElementById('cartItems');
+  if (cart.length === 0) {
+    el.innerHTML = '<div class="cart-empty">Nenhum item adicionado.</div>';
+    return;
+  }
+  el.innerHTML = cart.map(i => `
+    <div class="cart-item">
+      <div class="ci-info">
+        <div class="ci-name">${i.name}</div>
+        <div class="ci-price">${fmt(getPrice(i.cost))}</div>
+      </div>
+      <div class="ci-qty">
+        <button onclick="changeQty(${i.id}, -1)">−</button>
+        <span>${i.qty}</span>
+        <button onclick="changeQty(${i.id}, +1)">+</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleCart() {
+  const overlay = document.getElementById('cartOverlay');
+  const drawer = document.getElementById('cartDrawer');
+  overlay.classList.toggle('open');
+  drawer.classList.toggle('open');
+}
+
+function checkout() {
+  if (cart.length === 0) { showToast('Adicione itens primeiro!'); return; }
+  showToast('✓ Pedido enviado! Obrigado 🎵');
+  cart = [];
+  updateCartUI();
+  toggleCart();
+}
+
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+filterProducts();
+</script>
+</body>
+</html>
